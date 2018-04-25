@@ -12,9 +12,9 @@ const checkWithNetcat  = (ip, port) => {
 
 const numToCron = {
   'half-hour': '*/30 * * * *',
-  'hour': '0 * * * *',
+  'hourly': '0 * * * *',
   'half-day': '* */12 * * *',
-  'day': '0 0 * * *',
+  'daily': '0 0 * * *',
 };
 
 exports.healthCheck = (config) => {
