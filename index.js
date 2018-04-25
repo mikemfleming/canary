@@ -2,11 +2,11 @@
 const { spawn } = require('child_process');
 const { CronJob } = require('cron');
 
-const checkWithNetcat  = (ip, port) => {
+const checkWithNetcat  = (ip, port, threshold) => {
   return new Promise((resolve, reject) => {
-    const netcat = spawn('nc', ['-z', '-w', '1', ip, port]);
+    const netcat = spawn('nc', ['-z', '-w', threshold, ip, port]);
 
-    netcat.on('exit', code => code ? reject({ ip, port, code }) : resolve({ ip, port, code }));
+    netcat.on('exit', code => code ? reject({ ip, port, connected: !code }) : resolve({ ip, port, connected: !code }));
   });
 };
 
@@ -25,13 +25,15 @@ exports.healthCheck = (config) => {
     onSuccess,
     onError,
     repeat,
+    threshold,
   } = config;
 
   if (ip && port) {
     const time = numToCron[repeat] || repeat;
     const tz = timezone || 'America/New_York';
+    const timeout = threshold || 1;
     const algo = () => {
-      return checkWithNetcat(ip, port)
+      return checkWithNetcat(ip, port, threshold)
         .then(onSuccess)
         .catch(onError);
     };

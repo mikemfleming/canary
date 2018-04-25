@@ -21,7 +21,14 @@ const myHealthcheck = healthCheck({
 myHealthCheck.stop();
 ```
 
-### Optional Configuration
+Your onSuccess and onError functions will always be called with an object
+matching this format:
+```
+{ ip: 'xxx.xx.xx.xxx', port: 8080, connected: true/false }
+```
+
+
+## Optional Configuration
 **repeat:** how often to repeat the health check. Takes `half-hour`,
 `hourly`, `half-day`, `daily`, or a custom value that is in standard
 cron format.
