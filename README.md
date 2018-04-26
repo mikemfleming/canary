@@ -26,7 +26,12 @@ myHealthCheck.stop();
 Your onChange and onComplete functions will always be called with an object
 matching this format:
 ```
-{ ip: 'xxx.xx.xx.xxx', port: 8080, currentStatus: Number, previousStatus: Number }
+{
+    ip: 'xxx.xx.xx.xxx',
+    port: 8080,
+    currentStatus: Number,
+    previousStatus: Number
+}
 ```
 
 Status `1` represents a failure to connect and status `0` represents a
