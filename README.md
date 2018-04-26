@@ -41,7 +41,9 @@ successful connection.
 **repeat:** How often to repeat the health check. Takes `half-hour`,
 `hourly`, `half-day`, `daily`, or a custom value that is in standard
 cron format.
+
 **timezone:** The desired timezone to schedule the health check with.
 Defaults to `America/New_York`.
+
 **timeout:** How long you want to your netcat command to wait for a
 connection. Defaults to 1 second.
