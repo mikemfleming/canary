@@ -2,14 +2,6 @@
 const { spawn } = require('child_process');
 const { CronJob } = require('cron');
 
-const checkWithNetcat  = (ip, port, threshold) => {
-  return new Promise((resolve, reject) => {
-    const netcat = spawn('nc', ['-z', '-w', threshold, ip, port]);
-
-    netcat.on('exit', code => code ? reject({ ip, port, connected: !code }) : resolve({ ip, port, connected: !code }));
-  });
-};
-
 const numToCron = {
   'half-hour': '*/30 * * * *',
   'hourly': '0 * * * *',
@@ -21,24 +13,30 @@ exports.healthCheck = (config) => {
   const {
     ip,
     port,
-    timezone,
-    onSuccess,
-    onError,
-    repeat,
-    threshold,
+    timezone = 'America/New_York',
+    repeat = numToCron[repeat],
+    timeout = 1,
+    onChange,
+    onComplete = () => {},
   } = config;
 
   if (ip && port) {
-    const time = numToCron[repeat] || repeat;
-    const tz = timezone || 'America/New_York';
-    const timeout = threshold || 1;
+    let previousStatus = 0; // assume its up at first
+
     const algo = () => {
-      return checkWithNetcat(ip, port, threshold)
-        .then(onSuccess)
-        .catch(onError);
+      return new Promise((resolve) => {
+        const netcat = spawn('nc', ['-z', '-w', timeout, ip, port]);
+        netcat.on('exit', code => resolve({ ip, port, currentStatus: code, previousStatus }));
+      }).then(report => {
+        if (report.currentStatus !== previousStatus) {
+          onChange(report);
+          previousStatus = report.currentStatus;
+        }
+        return onComplete(report);
+      });
     };
 
-    return new CronJob(time, algo, null, true, tz);
+    return new CronJob(repeat, algo, null, true, timezone);
   }
 
   throw new Error('Missing required arguments ip and port.');
