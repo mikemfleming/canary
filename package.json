@@ -1,5 +1,6 @@
 {
-  "name": "canary",
+  "name": "canary-bird",
+  "author": "mikemfleming",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
