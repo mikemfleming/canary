@@ -8,7 +8,7 @@ and Node's `child_process`.
 
 ## Basic Usage
 ```
-const { healthCheck } = require('canary');
+const { healthCheck } = require('canary-bird');
 
 // start
 const myHealthcheck = healthCheck({
