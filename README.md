@@ -28,7 +28,7 @@ matching this format:
 {
     ip: 'xxx.xx.xx.xxx',
     port: 8080,
-    currentStatus: Number (0 or 1),
+    listening: true,
 }
 ```
 

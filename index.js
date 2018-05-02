@@ -1,6 +1,6 @@
 
-const { spawn } = require('child_process');
 const { CronJob } = require('cron');
+const NetcatClient = require('netcat/client');
 
 exports.healthCheck = (config) => {
   const {
@@ -8,17 +8,17 @@ exports.healthCheck = (config) => {
     port,
     onComplete,
     repeat,
-    timeout = 1,
+    timeout = 1000,
     timezone = 'America/New_York',
   } = config;
 
   if (ip && port) {
-    const algo = () => {
-      const netcat = spawn('nc', ['-z', '-w', timeout, ip, port]);
-      netcat.on('exit', code => onComplete({ ip, port, currentStatus: code }));
-    };
-
-    return new CronJob(repeat, algo, null, true, timezone);
+    return new CronJob(repeat, () => {
+      const nc = new NetcatClient();
+      nc.addr(ip).scan(port, (report) => {
+        onComplete({ ip, port, listening: report[port] === 'open' });
+      }).waitTime(timeout);
+    }, null, true, timezone);
   }
 
   throw new Error('Missing required arguments ip and port.');
