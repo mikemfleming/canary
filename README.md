@@ -1,8 +1,9 @@
 # What is Canary?
-Canary is a super lightweight module that checks the status of a provided
-source and performs a callback function when that status changes. It is
-powered by the CLI util [netcat](https://en.wikipedia.org/wiki/Netcat)
-and Node's `child_process`.
+Canary checks the status of a provided source and performs a callback
+function when that status changes. It is inspired by the CLI util
+[netcat](https://en.wikipedia.org/wiki/Netcat) and powered by
+[cron](https://www.npmjs.com/package/cron) and
+[netcat](https://www.npmjs.com/package/netcat).
 
 ### Use Canary to notify your developers of critical connection failures.
 
@@ -22,7 +23,7 @@ const myHealthcheck = healthCheck({
 myHealthCheck.stop();
 ```
 
-Your onChange function will always be called with an object
+Your onChange function will always be called with a report object
 matching this format:
 ```
 {
@@ -32,8 +33,6 @@ matching this format:
 }
 ```
 
-currentStatus `1` represents a failure to connect and status `0` represents a
-successful connection.
 
 ## Required Configuration
 **repeat:** How often to repeat the health check. Supports a value that
