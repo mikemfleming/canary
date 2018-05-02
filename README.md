@@ -1,4 +1,4 @@
-# What is Canary?
+# What is [Canary](https://www.npmjs.com/package/canary-bird)?
 Canary checks the status of a provided source and performs a callback
 function when that status changes. It is inspired by the CLI util
 [netcat](https://en.wikipedia.org/wiki/Netcat) and powered by
